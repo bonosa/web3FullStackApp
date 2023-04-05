@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Full Stack App</title>
+</head>
+<body>
+    <h1>Welcome to My First Full Stack App</h1>
+    <p>This is a simple example of an index.html file being served by a Flask app.</p>
+
+    <form id="data-form">
+        <label for="address">Ethereum Address:</label>
+        <input type="text" id="address" name="address" value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e">
+        <button type="submit">Load Data</button>
+    </form>
+
+    <div id="result"></div>
+    <h2>Ethereum Price: <span id="ethPrice"></span> USD</h2>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchEthereumPrice);
+
+        async function fetchEthereumPrice() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch Ethereum price');
+                }
+                const data = await response.json();
+                console.log(data.ethereum.usd);
+                document.getElementById('ethPrice').textContent = data.ethereum.usd;
+            } catch (error) {
+                console.error('Error fetching Ethereum price:', error);
+            }
+        }
+
+        document.getElementById('data-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const address = document.getElementById('address').value.trim();
+
+            if (address === '') {
+                displayError('Please enter a valid Ethereum address.');
+            } else {
+                try {
+                    const response = await fetch(`/load-data?address=${address}`);
+
+                    if (!response.ok) {
+                        throw new Error('Something went wrong. Please try again.');
+                    }
+
+                    const data = await response.json();
+                    const ethPrice = document.getElementById('ethPrice').textContent;
+                    const portfolioValue = parseFloat(data.eth_balance) * parseFloat(ethPrice);
+                    console.log(data);
+                    console.log('ETH Price:', ethPrice);
+                    document.getElementById('result').innerHTML = `
+                        <p>Address: ${data.address}</p>
+                        <p>ETH Balance: ${data.eth_balance} ETH</p>
+                        <p>ETH Price: $${ethPrice} USD</p>
+                        <p>Portfolio Value: $${portfolioValue.toFixed(2)} USD</p>
+                    `;
+                } catch (error) {
+                    displayError(error.message);
+                }
+            }
+        });
+
+        function displayError(errorMessage) {
+            document.getElementById('result').innerHTML = `
+                <p style="color: red;">Error: ${errorMessage}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
+
+
+
+  
+
+
+

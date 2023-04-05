@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test JavaScript Code</title>
+</head>
+<body>
+    <script>
+        (async () => {
+            const response = await fetch('http://localhost:5000/load-data?address=0x742d35Cc6634C0532925a3b844Bc454e4438f44e');
+            const data = await response.json();
+            console.log(data);
+            console.log('ETH Price:', data.eth_price_usd);
+        })();
+    </script>
+</body>
+</html>
