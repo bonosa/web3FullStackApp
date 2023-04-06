@@ -12,7 +12,7 @@ const PortfolioTracker = () => {
       const response = await axios.get(`http://localhost:5000/load-data?address=${ethAddress}`);
       const data = response.data;
       setEthBalance(data.eth_balance);
-      setEthPrice(data.eth_price);
+      setEthPrice(data.eth_price_usd);
       setPortfolioValue(data.portfolio_value);
     } catch (error) {
       console.error('Error fetching data:', error);
