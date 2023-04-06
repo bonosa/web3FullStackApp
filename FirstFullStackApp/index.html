@@ -19,21 +19,24 @@
     <h2>Ethereum Price: <span id="ethPrice"></span> USD</h2>
 
     <script>
-        document.addEventListener('DOMContentLoaded', fetchEthereumPrice);
-
-        async function fetchEthereumPrice() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch Ethereum price');
+        console.log('Starting script execution...');
+        
+        function fetchEthereumPrice() {
+            console.log('Inside fetchEthereumPrice function...');
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                console.log('Ready state changed: ', xhr.readyState);
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    const data = JSON.parse(xhr.responseText);
+                    console.log('Received data: ', data);
+                    console.log(data.ethereum.usd);
+                    document.getElementById('ethPrice').textContent = data.ethereum.usd;
                 }
-                const data = await response.json();
-                console.log(data.ethereum.usd);
-                document.getElementById('ethPrice').textContent = data.ethereum.usd;
-            } catch (error) {
-                console.error('Error fetching Ethereum price:', error);
-            }
+            };
+            xhr.open('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd', true);
+            xhr.send();
         }
+        fetchEthereumPrice();
 
         document.getElementById('data-form').addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -74,10 +77,3 @@
     </script>
 </body>
 </html>
-
-
-
-  
-
-
-
