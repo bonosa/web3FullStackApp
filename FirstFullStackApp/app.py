@@ -2,15 +2,10 @@ from flask import Flask, render_template_string, request, jsonify
 from web3 import Web3
 from decimal import Decimal
 import requests
-from flask import Flask, jsonify, request
-from flask_cors import CORS  # Import the CORS module
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for the entire Flask app
-
-# The rest of your app.py code
-
-
+CORS(app)
 
 @app.route('/')
 def index():
@@ -19,11 +14,9 @@ def index():
     return render_template_string(index_content)
 
 @app.route('/load-data', methods=['GET'])
-
 def load_data():
     eth_address = request.args.get('address')
     
-    # Check if the address is not empty
     if not eth_address:
         return jsonify({"error": "Empty address"}), 400
   
@@ -39,7 +32,6 @@ def load_data():
     eth_price_usd = price_data["ethereum"]["usd"]
     eth_price_decimal = Decimal(eth_price_usd)
 
-    # Print the eth_price_usd variable
     print("ETH Price USD:", eth_price_usd)
 
     portfolio_value = eth_balance * eth_price_decimal
@@ -51,7 +43,6 @@ def load_data():
         'portfolio_value': str(portfolio_value)
     })
 
-
-
 if __name__ == '__main__':
     app.run(debug=True)
+
